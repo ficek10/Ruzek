@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plánovač služeb</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .table-container {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .fixed-column {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 10;
+            border-right: 2px solid #e5e7eb;
+            width: 200px;
+            min-width: 200px;
+        }
+
+        .shift-cell {
+            min-width: 60px;
+            width: 60px;
+            padding: 4px;
+        }
+
+        .shift-select {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .weekend {
+            background-color: #fff8e1;
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1px solid #e5e7eb;
+        }
+
+        .employee-name {
+            padding: 8px;
+            background: white;
+        }
+
+        /* Styly pro nastavení */
+        .settings-panel input[type="number"] {
+            width: 60px;
+            padding: 4px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        
+        .settings-panel label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Styly pro panely s nastavením */
+        .settings-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.375rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-full bg-white rounded-lg shadow p-6">
+        <!-- Hlavička -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">Plánovač služeb</h1>
+            <div class="flex gap-4">
+                <select id="monthSelect" class="border p-2 rounded"></select>
+                <select id="yearSelect" class="border p-2 rounded"></select>
+            </div>
+        </div>
+
+        <!-- Tabulka s fixním sloupcem -->
+        <div class="table-container">
+            <table id="shiftTable">
+                <thead>
+                    <tr>
+                        <th class="fixed-column">Jméno</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Tlačítka -->
+        <div class="mt-6 flex gap-4">
+            <button onclick="checkRules()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Kontrola pravidel
+            </button>
+            <button onclick="checkOccupancy()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Kontrola obsazení
+            </button>
+            <button onclick="exportToWord()" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                Export do Wordu
+            </button>
+        </div>
+
+        <!-- Výstrahy -->
+        <div id="alerts" class="mt-6 hidden">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <strong class="font-bold">Nalezeny problémy!</strong>
+                <ul id="alertsList" class="list-disc pl-4 mt-2"></ul>
+            </div>
+        </div>
+
+        <!-- Nastavení zaměstnanců -->
+        <div id="employeeSettings" class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 class="font-bold mb-4">Nastavení zaměstnanců</h3>
+            <div class="settings-grid" id="employeeSettingsGrid"></div>
+        </div>
+
+        <!-- Nastavení kontrol -->
+        <div id="rulesSettings" class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 class="font-bold mb-4">Nastavení kontrol</h3>
+            <div class="settings-grid" id="rulesSettingsGrid"></div>
+        </div>
+
+        <!-- Legenda -->
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 class="font-bold mb-2">Typy služeb:</h3>
+            <div id="legend" class="grid grid-cols-4 gap-4"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
