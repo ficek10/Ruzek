@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nastavení zaměstnanců</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .settings-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.375rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-full bg-white rounded-lg shadow p-6">
+        <h1 class="text-2xl font-bold mb-4">Nastavení zaměstnanců</h1>
+
+        <!-- Formulář pro nastavení zaměstnanců -->
+        <div id="employeeSettingsGrid" class="settings-grid"></div>
+
+        <!-- Tlačítko pro uložení nastavení -->
+        <button onclick="saveSettings()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Uložit nastavení
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
