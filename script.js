@@ -537,14 +537,13 @@ function exportToWord() {
                 @page {
                     size: landscape;
                     mso-page-orientation: landscape;
-                    margin: 1cm;
+                    margin: 0.5cm;
                 }
                 body {
-                    font-family: Tahoma;
-                }
-                h1 {
-                    text-align: center;
-                    margin-bottom: 20px;
+                    font-family: Tahoma, sans-serif;
+                    font-size: 10pt;
+                    margin: 0;
+                    padding: 0;
                 }
                 table {
                     border-collapse: collapse;
@@ -553,12 +552,23 @@ function exportToWord() {
                 }
                 th, td {
                     border: 1px solid black;
-                    padding: 4px;
+                    padding: 2px;
                     text-align: center;
+                    vertical-align: middle;
+                    font-weight: normal;
                 }
                 th {
                     background-color: #f0f0f0;
                     font-weight: bold;
+                }
+                tr:nth-child(odd) {
+                    background-color: #f9f9f9;
+                }
+                .header {
+                    font-size: 14pt;
+                    font-weight: bold;
+                    text-align: center;
+                    background-color: white !important;
                 }
                 .weekend {
                     background-color: #fffde7;
@@ -569,33 +579,42 @@ function exportToWord() {
     `;
 
     let content = `
-        <h1>${new Date(currentYear, currentMonth - 1).toLocaleString('cs', { month: 'long' })} ${currentYear}</h1>
         <table>
-            <tr>
-                <th>Jméno</th>
+            <thead>
+                <tr>
+                    <th colspan="33" class="header">${new Date(currentYear, currentMonth - 1).toLocaleString('cs', { month: 'long' }).toUpperCase()} ${currentYear}</th>
+                </tr>
+                <tr>
+                    <th> </th>
     `;
 
-    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-
-    // Hlavička s dny
+    // Dny v týdnu
+    const daysOfWeek = ['so', 'ne', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne', 'po'];
+    daysOfWeek.slice(0, daysInMonth).forEach(day => {
+        content += `<th>${day}</th>`;
+    });
+    content += '</tr>';
+    content += '<tr>';
+    content += `<th> </th>`;
+    
+    // Čísla dnů
     for (let i = 1; i <= daysInMonth; i++) {
         content += `<th class="${isWeekend(i) ? 'weekend' : ''}">${i}</th>`;
     }
-    content += '</tr>';
+    content += '</tr></thead><tbody>';
 
-    // Data zaměstnanců - použití exportColors pro vybrané služby
+    // Data zaměstnanců
     Object.keys(employees).forEach(employee => {
-        content += `<tr><td>${employee}</td>`;
+        content += `<tr><td><strong>${employee}</strong></td>`;
         for (let day = 1; day <= daysInMonth; day++) {
-            const shift = shifts[`${employee}-${day}`] || '';
-            const style = shift && exportColors[shift] ? 
-                `background-color: ${exportColors[shift]}` : '';
-            content += `<td style="${style}">${shift}</td>`;
+            const shift = shifts[`${employee}-${day}`] || ' ';
+            const className = isWeekend(day) ? 'weekend' : '';
+            content += `<td class="${className}"><strong>${shift === ' ' ? '' : shift}</strong></td>`;
         }
         content += '</tr>';
     });
 
-    content += '</table>';
+    content += '</tbody></table>';
 
     const footer = `</body></html>`;
 
